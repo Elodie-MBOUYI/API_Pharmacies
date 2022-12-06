@@ -1,82 +1,249 @@
-CREATE DATABASE pharmacy;
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1
+-- Généré le : sam. 03 déc. 2022 à 14:19
+-- Version du serveur : 10.4.24-MariaDB
+-- Version de PHP : 7.4.29
 
--- La table utilisateur et attributs
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
-CREATE TABLE `utilisateur` (
-  `id_Utilisateur` int PRIMARY KEY AUTO_INCREMENT,
-  `nom` varchar(150) NOT NULL,
-  `telephone` varchar(45) NOT NULL,
-  `message` varchar(145) NOT NULL
-) ENGINE=Innodb DEFAULT CHARSET=utf8;
 
--- La table pharmacie centrale et attributs
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-CREATE TABLE `pharm_centrale` (
-  `id_pharmacie` int PRIMARY KEY AUTO_INCREMENT,
-  `id_utilisateur` int(25) NOT NULL,
-  `id_produits` int(25) NOT NULL,
-   `catégorie`  varchar (20) NOT NULL,
-   `nom_produits`  varchar (20) NOT NULL,
-   `description`  varchar (20) NOT NULL,
-   `prix` float NOT NULL, 
-   FOREIGN KEY (`id_Utilisateur`) REFERENCES utilisateur(`id_Utilisateur`)
-) ENGINE=Innodb DEFAULT CHARSET=utf8;
+--
+-- Base de données : `pharmacy`
+--
 
--- La table de la liste des pharmacies de Port-Gentil et attributs
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `adresse`
+--
+
+CREATE TABLE `adresse` (
+  `id_pharmacie` int(11) NOT NULL,
+  `id_demande` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `demandes`
+--
+
+CREATE TABLE `demandes` (
+  `id_demande` int(11) NOT NULL,
+  `date` datetime NOT NULL DEFAULT current_timestamp(),
+  `nom_client` text(25) NOT NULL,
+  `telephone` varchar(10) NOT NULL,
+  `Ordonnance` varchar(200) NOT NULL,
+  `message` varchar(500) NOT NULL,
+  `id_statut` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `demandes`
+--
+
+INSERT INTO `demandes` (`id_demande`, `date`, `nom_client`, `telephone`, `Ordonnance`, `message`, `id_statut`) VALUES
+(4, '2022-12-03 10:35:44', 'Rose MATA', '062456321', '', 'Blédine 800g', 1),
+(5, '2022-12-03 13:26:59', 'Lucie Edith', '074523167', '', 'Dacryoserum', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `pharmacies`
+--
 
 CREATE TABLE `pharmacies` (
-  `id_pharmacies` int PRIMARY KEY AUTO_INCREMENT,
-  `id_pharmacie` int(9) NOT NULL,
+  `id_pharmacie` int(11) NOT NULL,
   `nom_pharmacie` varchar(300) NOT NULL,
   `adresse` varchar(300) NOT NULL,
   `tel_pharmacie` varchar(145) NOT NULL,
-   FOREIGN KEY (`id_pharmacie`) REFERENCES pharm_centrale(`id_pharmacie`)
-) ENGINE=Innodb DEFAULT CHARSET=utf8;
+  `Id_users` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Déchargement des données de la table `pharmacies`
+--
 
--- La table des pharmacies de  garde à Port-Gentil et attributs
+INSERT INTO `pharmacies` (`id_pharmacie`, `nom_pharmacie`, `adresse`, `tel_pharmacie`, `Id_users`) VALUES
+(4, 'Pharmacie RADOCA', 'Rue boulevard Leon Mba', '01552462', 1),
+(5, 'Pharmacie ANDREA', 'Rue cocotiers', '01245796', 1);
 
-CREATE TABLE `pharmgard` (
-  `id_pharmgard` int PRIMARY KEY AUTO_INCREMENT,
-  `id_pharmacies` int(9) NOT NULL,
-  `nom_pharmacie` varchar(25) NOT NULL,
-  `telephone` varchar(10) NOT NULL,
-  FOREIGN KEY (`id_pharmacies`) REFERENCES pharmacies(`id_pharmacies`)
-) ENGINE=Innodb DEFAULT CHARSET=utf8;
+-- --------------------------------------------------------
 
--- La table de la pharmacie de garde et attributs
+--
+-- Structure de la table `statut`
+--
 
-CREATE TABLE `pharm_banco` (
-  `id_pharmacie` int PRIMARY KEY AUTO_INCREMENT,
-  `id_pharmgard` int(25) NOT NULL,
-  `id_utilisateur` int(25) NOT NULL,
-  `id_produits` int(25) NOT NULL,
-   `catégorie`  varchar (20) NOT NULL,
-   `nom_produits`  varchar (20) NOT NULL,
-   `description`  varchar (20) NOT NULL,
-   `prix` float NOT NULL, 
-   FOREIGN KEY (`id_pharmgard`) REFERENCES pharmgard(`id_pharmgard`)
-) ENGINE=Innodb DEFAULT CHARSET=utf8;
+CREATE TABLE `statut` (
+  `id_statut` int(11) NOT NULL,
+  `libelle` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Déchargement des données de la table `statut`
+--
 
--- insertion des valeurs dans la table produits
+INSERT INTO `statut` (`id_statut`, `libelle`) VALUES
+(1, 'Terminé');
 
-INSERT INTO `pharmgard` (`id_pharmgard`, `id_pharmacies`, `nom_pharmacie`, `telephone`) VALUES
-(NULL, '1', 'Pharmacie Banco',  '00123245'),
-(NULL, '2', 'Pharmacie Radoca',  '00123245'),
-(NULL, '3', 'Pharmacie Centrale',  '00123245'),
-(NULL, '4', 'Pharmacie Andréa',  '00123245')
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `typeuser`
+--
 
--- insertion des valeurs dans la table pharmacie de garde
+CREATE TABLE `typeuser` (
+  `id_typeuser` int(11) NOT NULL,
+  `libelle` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Déchargement des données de la table `typeuser`
+--
 
-INSERT INTO `pharmacies` (`id_Pharmacies`, `id_Pharmacie`, `nom_pharmacie`,`adresse`,`tel_pharmacie`) VALUES
-(NULL, '1','bqnco','lqlaset','066232114')
-(NULL, '1','bqnco','lqlaset','066232114')
-(NULL, '1','bqnco','lqlaset','066232114')
+INSERT INTO `typeuser` (`id_typeuser`, `libelle`) VALUES
+(1, 'Pharmacien'),
+(2, 'Administrateur général');
 
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `users`
+--
 
+CREATE TABLE `users` (
+  `id_Users` int(11) NOT NULL,
+  `id_typeuser` int(11) NOT NULL,
+  `login` varchar(25) NOT NULL,
+  `password` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Déchargement des données de la table `users`
+--
 
+INSERT INTO `users` (`id_Users`, `id_typeuser`, `login`, `password`) VALUES
+(1, 1, 'Evrard', 'hello1'),
+(2, 2, 'Quentin', 'hello2');
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `adresse`
+--
+ALTER TABLE `adresse`
+  ADD KEY `id_pharmacieFK` (`id_pharmacie`),
+  ADD KEY `if_demandeFK` (`id_demande`);
+
+--
+-- Index pour la table `demandes`
+--
+ALTER TABLE `demandes`
+  ADD PRIMARY KEY (`id_demande`),
+  ADD KEY `id_statutFK` (`id_statut`);
+
+--
+-- Index pour la table `pharmacies`
+--
+ALTER TABLE `pharmacies`
+  ADD PRIMARY KEY (`id_pharmacie`),
+  ADD KEY `id_usersFK` (`Id_users`);
+
+--
+-- Index pour la table `statut`
+--
+ALTER TABLE `statut`
+  ADD PRIMARY KEY (`id_statut`);
+
+--
+-- Index pour la table `typeuser`
+--
+ALTER TABLE `typeuser`
+  ADD PRIMARY KEY (`id_typeuser`);
+
+--
+-- Index pour la table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id_Users`),
+  ADD KEY `id_typeuserFK` (`id_typeuser`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `demandes`
+--
+ALTER TABLE `demandes`
+  MODIFY `id_demande` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT pour la table `pharmacies`
+--
+ALTER TABLE `pharmacies`
+  MODIFY `id_pharmacie` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT pour la table `statut`
+--
+ALTER TABLE `statut`
+  MODIFY `id_statut` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT pour la table `typeuser`
+--
+ALTER TABLE `typeuser`
+  MODIFY `id_typeuser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT pour la table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id_Users` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `adresse`
+--
+ALTER TABLE `adresse`
+  ADD CONSTRAINT `id_pharmacieFK` FOREIGN KEY (`id_pharmacie`) REFERENCES `pharmacies` (`id_pharmacie`),
+  ADD CONSTRAINT `if_demandeFK` FOREIGN KEY (`id_demande`) REFERENCES `demandes` (`id_demande`);
+
+--
+-- Contraintes pour la table `demandes`
+--
+ALTER TABLE `demandes`
+  ADD CONSTRAINT `id_statutFK` FOREIGN KEY (`id_statut`) REFERENCES `statut` (`id_statut`);
+
+--
+-- Contraintes pour la table `pharmacies`
+--
+ALTER TABLE `pharmacies`
+  ADD CONSTRAINT `id_usersFK` FOREIGN KEY (`Id_users`) REFERENCES `users` (`id_Users`);
+
+--
+-- Contraintes pour la table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `id_typeuserFK` FOREIGN KEY (`id_typeuser`) REFERENCES `typeuser` (`id_typeuser`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

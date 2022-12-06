@@ -1,7 +1,11 @@
+// importation du framework,de l'App et des dépendances
+
 const express = require('express');
 const cors = require('cors')
 const app = express()
 var mysql = require("mysql")
+
+// configuration du port,de l'APP et connexion de la base de données à mysql
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
@@ -20,58 +24,39 @@ const con = mysql.createConnection({
     database: 'pharmacy'
 })
 
-con.connect((err)=>{
-    if(err)
-    {
-        console.log(err)
-    }else{
-        console.log('connexion établie');
-    }
+
+// La route get
+app.get('/', (req, res)=>{
+  res.send('Hello');
 })
 
-// Lister les produits enregistrés dans la base de données de la pharmacie choisie;
-app.get('/api/produits', (req, res)=>{
+
+app.get('/api/pharmacies', (req, res)=>{
     
-    con.query('SELECT * FROM produits',(err,result)=>{
+    con.query('SELECT * FROM pharmacies',(err,result)=>{
         if(err) res.status(500).send(err)
         
         res.status(200).json(result)
     })
 })
 
-//Ajouter les produits pharmaceutiques dans la base de données;
-app.post('/api/produits/ajout', (req, res)=>{
-    const proprietes = req.body.proprietes;
-    const produits = req.body.produits;
-    const description = req.body.description;
-    const prix = req.body.prix;
+// Les  requetes post
 
-    
-    con.query('INSERT INTO produits VALUES(NULL,?,?,?,?,?)',[proprietes,produits,description,prix],(err,result)=>{
-        if(err)
-    {
-        console.log(err)
-    }else{
-        res.send('POSTED');
-    }
-    })
-})
+// Ajout d'une nouvelle demande dans la bd
 
-//Ajouter les noms de pharmacies de garde dans la base de données
-app.post('/api/pharmgard/ajout', (req, res)=>{
-    const nom_pharmgard = req.body.nom_pharmgard;
-    const telephone = req.body.telephone;
-    
-    
-    con.query('INSERT INTO marque VALUES(NULL,?,?)',[nom_pharmgard,telephone],(err,result)=>{
-        if(err)
-    {
-        console.log(err)
-    }else{
-        res.send('POSTED');
-    }
-    })
-})
-
-
+con.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+    var sql = "INSERT INTO demandes (nom_client,telephone,ordonnance,message,id_statut ) VALUES ?";
+    var values = [
+      ['Richard', '0124578', 'Panadol 1000mg', 'Panadol 1000g', '1'],
+      ['Susan', '062457827', 'Fervex effervescents 500mg', 'besoin de vous rencontrer', '2'],
+      ['Eloise', '077546328', 'Bactol 500ml', 'besoin de deux Blédine', '2'],
+      ['Max', '065124787', 'Fervex effervescents 500mg', 'besoin de vous rencontrer', '2'],
+    ];
+    con.query(sql, [values], function (err, result) {
+      if (err) throw err;
+      console.log("Number of records inserted: " + result.affectedRows);
+    });
+  });
 
