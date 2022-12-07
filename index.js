@@ -44,19 +44,26 @@ app.get('/api/pharmacies', (req, res)=>{
 
 // Ajout d'une nouvelle demande dans la bd
 
-con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
-    var sql = "INSERT INTO demandes (nom_client,telephone,ordonnance,message,id_statut ) VALUES ?";
-    var values = [
-      ['Richard', '0124578', 'Panadol 1000mg', 'Panadol 1000g', '1'],
-      ['Susan', '062457827', 'Fervex effervescents 500mg', 'besoin de vous rencontrer', '2'],
-      ['Eloise', '077546328', 'Bactol 500ml', 'besoin de deux Blédine', '2'],
-      ['Max', '065124787', 'Fervex effervescents 500mg', 'besoin de vous rencontrer', '2'],
-    ];
-    con.query(sql, [values], function (err, result) {
-      if (err) throw err;
-      console.log("Number of records inserted: " + result.affectedRows);
-    });
-  });
+app.post('/api/demandes/ajout', (req, res)=>{
+  const  nom_client = req.body.nom_client;
+  const telephone = req.body.telephone;
+  const ordonnance = req.body.ordonnance;
+  const message = req.body.message; 
+  const id_statut= req.body.id_statut; 
+
+con.query('INSERT INTO demandes VALUES(NULL,?,?,?,?,?)',[nom_client,telephone,ordonnance,message,id_statut],(err,result)=>{
+  if(err)
+{
+  console.log(err)
+}else{
+  res.send('ajout d une nouvelle demande');
+}
+})
+})
+
+
+
+
+
+
 
