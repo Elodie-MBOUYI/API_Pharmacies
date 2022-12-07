@@ -23,9 +23,7 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
---
 -- Structure de la table `adresse`
---
 
 CREATE TABLE `adresse` (
   `id_pharmacie` int(11) NOT NULL,
@@ -34,9 +32,7 @@ CREATE TABLE `adresse` (
 
 -- --------------------------------------------------------
 
---
 -- Structure de la table `demandes`
---
 
 CREATE TABLE `demandes` (
   `id_demande` int(11) NOT NULL,
